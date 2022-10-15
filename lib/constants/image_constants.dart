@@ -1,3 +1,3 @@
 class ImageConstants {
-  static const String cloudyLandscape = 'assets/cloudy-landscape.jpeg';
+  static const String cloudyLandscape = 'assets/img-cloudy-landscape.jpeg';
 }

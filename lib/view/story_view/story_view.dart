@@ -15,147 +15,154 @@ class StoryView extends StatelessWidget {
 
     return Scaffold(
         backgroundColor: AppColors.scaffoldBackgroundColor,
-        floatingActionButton: FloatingActionButton(
-            child: const Icon(
-              Icons.my_location_outlined,
-              color: Colors.black,
-            ),
-            onPressed: () {}),
+        floatingActionButton: const CustomFloatingButton(),
         body: ListView(
           children: [
             Stack(
               children: [
-                Image.asset(
-                  ImageConstants.cloudyLandscape,
-                  fit: BoxFit.cover,
-                ),
-                Row(
-                  children: [
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                      elevation: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12.0, vertical: 4.0),
-                        child: Row(
-                          children: const [
-                            Icon(
-                              Icons.star,
-                              color: Colors.yellow,
-                            ),
-                            Text(
-                              StringConstants.starCount,
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
-                      children: [
-                        Text(
-                          StringConstants.level,
-                          style: TextStyle(
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .headline6!
-                                  .fontSize,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                shadowColor: Colors.orange,
-                                elevation: 8,
-                                fixedSize: const Size(150, 45),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                primary: AppColors.elevatedButtonYellowColor),
-                            onPressed: () {},
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.star,
-                                  color: AppColors.starIconYellowColor,
-                                ),
-                                Text(
-                                  StringConstants.starProgress,
-                                  style: TextStyle(
-                                      fontSize: Theme.of(context)
-                                          .textTheme
-                                          .headline6!
-                                          .fontSize,
-                                      color: AppColors.textColorBlack,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ))
-                      ],
-                    ),
-                  ],
-                ),
+                backgroundImage(),
+                const StarCountCardWidget(starCount: StringConstants.starCount),
+                levelAndStarProgressWidget(context),
                 for (var model in data.storyPersonList)
                   Positioned(
-                    left: model.location.dx,
-                    top: model.location.dy,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.red,
-                      ),
-                      height: 55,
-                      width: 55,
-                      child: model.profileIcon,
+                    left: model.location.dx - 20,
+                    top: model.location.dy - 20,
+                    child: Column(
+                      children: [
+                        circularStoryPerson(model),
+                        StarCountCardWidget(
+                          starCount: model.starAmount.toString(),
+                        )
+                      ],
                     ),
                   ),
-                // Positioned(
-                //   left: MediaQuery.of(context).size.width / 1.3,
-                //   top: MediaQuery.of(context).size.height / 2,
-                //   child: Container(
-                //     decoration: BoxDecoration(
-                //       shape: BoxShape.circle,
-                //       color: Colors.red,
-                //     ),
-                //     height: 55,
-                //     width: 55,
-                //     child: const Icon(
-                //       Icons.person,
-                //       size: 55,
-                //     ),
-                //   ),
-                // ),
-                // Positioned(
-                //   left: MediaQuery.of(context).size.width / 5,
-                //   top: MediaQuery.of(context).size.height / 6,
-                //   child: Container(
-                //     height: 55,
-                //     width: 55,
-                //     decoration: BoxDecoration(
-                //       shape: BoxShape.circle,
-                //       color: Colors.green,
-                //     ),
-                //     child: const Icon(
-                //       Icons.person,
-                //       size: 55,
-                //     ),
-                //   ),
-                // ),
-                CustomPaint(
-                  size: const Size(300, 300),
-                  painter: MyPainter(),
-                )
+                CustomPaint(size: const Size(300, 300), painter: MyPainter())
               ],
             )
           ],
         ));
+  }
+
+  Container circularStoryPerson(StoryPersonModel model) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.indigo[100],
+        border: Border.all(
+          color: model.borderColor,
+          width: 4,
+        ),
+      ),
+      height: 65,
+      width: 65,
+      child: model.profileIcon,
+    );
+  }
+
+  Image backgroundImage() {
+    return Image.asset(
+      ImageConstants.cloudyLandscape,
+      fit: BoxFit.cover,
+    );
+  }
+
+  Row levelAndStarProgressWidget(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Column(
+          children: [
+            Text(
+              StringConstants.level,
+              style: TextStyle(
+                  fontSize: Theme.of(context).textTheme.headline6!.fontSize,
+                  fontWeight: FontWeight.bold),
+            ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    shadowColor: Colors.orange,
+                    elevation: 8,
+                    fixedSize: const Size(150, 45),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    primary: AppColors.elevatedButtonYellowColor),
+                onPressed: () {},
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.star,
+                      color: AppColors.starIconYellowColor,
+                    ),
+                    Text(
+                      StringConstants.starProgress,
+                      style: TextStyle(
+                          fontSize:
+                              Theme.of(context).textTheme.headline6!.fontSize,
+                          color: AppColors.textColorBlack,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ))
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class CustomFloatingButton extends StatelessWidget {
+  const CustomFloatingButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+        child: const Icon(
+          Icons.my_location_outlined,
+          color: Colors.black,
+        ),
+        onPressed: () {});
+  }
+}
+
+class StarCountCardWidget extends StatelessWidget {
+  final String starCount;
+  const StarCountCardWidget({
+    Key? key,
+    this.starCount = StringConstants.starCount,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          elevation: 2,
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.star,
+                  color: Colors.yellow,
+                ),
+                Text(
+                  starCount,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -186,7 +193,7 @@ class MyPainter extends CustomPainter {
 
       canvas.drawPath(
           dashPath(path,
-              dashArray: CircularIntervalList<double>(<double>[6.0, 4.5])),
+              dashArray: CircularIntervalList<double>(<double>[9.0, 4.5])),
           paint);
     });
   }

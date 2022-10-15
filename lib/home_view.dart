@@ -20,10 +20,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> tabbarScreens = [
-    StoryView(),
-    WordsView(),
-    GrammerView(),
-    ProfileView(),
+    const StoryView(),
+    const WordsView(),
+    const GrammerView(),
+    const ProfileView(),
   ];
 
   @override
@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedItem,
         onTap: tabChanger,
-        items: [
+        items: const [
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.chat_outlined,
@@ -60,8 +60,8 @@ class _HomePageState extends State<HomePage> {
               ),
               label: "Profil"),
         ],
-        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-        unselectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
       ),
     );
   }

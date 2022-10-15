@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:ui' as ui;
-import 'dart:math' as math;
+import 'package:flutter_letmespeakapp_story_ui/constants/color_constants.dart';
+import 'package:flutter_letmespeakapp_story_ui/constants/image_constants.dart';
+import 'package:flutter_letmespeakapp_story_ui/constants/string_constants.dart';
+import 'package:flutter_letmespeakapp_story_ui/model/story_person_model.dart';
 
 import 'package:path_drawing/path_drawing.dart';
 
@@ -9,10 +11,12 @@ class StoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final StoryPersonDummyData data = StoryPersonDummyData();
+
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 234, 254, 255),
+        backgroundColor: AppColors.scaffoldBackgroundColor,
         floatingActionButton: FloatingActionButton(
-            child: Icon(
+            child: const Icon(
               Icons.my_location_outlined,
               color: Colors.black,
             ),
@@ -22,33 +26,32 @@ class StoryView extends StatelessWidget {
             Stack(
               children: [
                 Image.asset(
-                  'assets/cloudy-landscape.jpeg',
+                  ImageConstants.cloudyLandscape,
                   fit: BoxFit.cover,
                 ),
                 Row(
-                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Card(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.circular(16.0),
                       ),
+                      elevation: 2,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12.0, vertical: 4.0),
                         child: Row(
-                          children: [
+                          children: const [
                             Icon(
                               Icons.star,
                               color: Colors.yellow,
                             ),
                             Text(
-                              "18",
+                              StringConstants.starCount,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
                       ),
-                      elevation: 2,
                     ),
                   ],
                 ),
@@ -58,7 +61,7 @@ class StoryView extends StatelessWidget {
                     Column(
                       children: [
                         Text(
-                          "Bölüm 2",
+                          StringConstants.level,
                           style: TextStyle(
                               fontSize: Theme.of(context)
                                   .textTheme
@@ -70,27 +73,27 @@ class StoryView extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                                 shadowColor: Colors.orange,
                                 elevation: 8,
-                                fixedSize: Size(150, 45),
+                                fixedSize: const Size(150, 45),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8.0),
                                 ),
-                                primary: Color.fromARGB(1000, 255, 233, 56)),
+                                primary: AppColors.elevatedButtonYellowColor),
                             onPressed: () {},
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.star,
-                                  color: Colors.yellowAccent,
+                                  color: AppColors.starIconYellowColor,
                                 ),
                                 Text(
-                                  "18/50",
+                                  StringConstants.starProgress,
                                   style: TextStyle(
                                       fontSize: Theme.of(context)
                                           .textTheme
                                           .headline6!
                                           .fontSize,
-                                      color: Colors.black,
+                                      color: AppColors.textColorBlack,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ],
@@ -99,34 +102,54 @@ class StoryView extends StatelessWidget {
                     ),
                   ],
                 ),
-                Positioned(
-                  left: MediaQuery.of(context).size.width / 1.3,
-                  top: MediaQuery.of(context).size.height / 2,
-                  child: Container(
-                    color: Colors.red,
-                    height: 55,
-                    width: 55,
-                    child: const Icon(
-                      Icons.person,
-                      size: 55,
+                for (var model in data.storyPersonList)
+                  Positioned(
+                    left: model.location.dx,
+                    top: model.location.dy,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.red,
+                      ),
+                      height: 55,
+                      width: 55,
+                      child: model.profileIcon,
                     ),
                   ),
-                ),
-                Positioned(
-                  left: MediaQuery.of(context).size.width / 5,
-                  top: MediaQuery.of(context).size.height / 6,
-                  child: Container(
-                    color: Colors.green,
-                    height: 55,
-                    width: 55,
-                    child: const Icon(
-                      Icons.person,
-                      size: 55,
-                    ),
-                  ),
-                ),
+                // Positioned(
+                //   left: MediaQuery.of(context).size.width / 1.3,
+                //   top: MediaQuery.of(context).size.height / 2,
+                //   child: Container(
+                //     decoration: BoxDecoration(
+                //       shape: BoxShape.circle,
+                //       color: Colors.red,
+                //     ),
+                //     height: 55,
+                //     width: 55,
+                //     child: const Icon(
+                //       Icons.person,
+                //       size: 55,
+                //     ),
+                //   ),
+                // ),
+                // Positioned(
+                //   left: MediaQuery.of(context).size.width / 5,
+                //   top: MediaQuery.of(context).size.height / 6,
+                //   child: Container(
+                //     height: 55,
+                //     width: 55,
+                //     decoration: BoxDecoration(
+                //       shape: BoxShape.circle,
+                //       color: Colors.green,
+                //     ),
+                //     child: const Icon(
+                //       Icons.person,
+                //       size: 55,
+                //     ),
+                //   ),
+                // ),
                 CustomPaint(
-                  size: Size(300, 300),
+                  size: const Size(300, 300),
                   painter: MyPainter(),
                 )
               ],
@@ -138,81 +161,27 @@ class StoryView extends StatelessWidget {
 
 class MyPainter extends CustomPainter {
   //         <-- CustomPainter class
-
-  // @override
-  // void paint(Canvas canvas, Size size) {
-  //   final pointMode = ui.PointMode.polygon;
-  //   //PointMode.lines ---  PointMode.polygon  ---- PointMode.points
-  //   final p1 = Offset(50, 50);
-  //   final p2 = Offset(250, 150);
-  //   final p3 = Offset(350, 90);
-  //   final points = [
-  //     Offset(50, 900),
-  //     Offset(300, 750),
-  //     Offset(50, 600),
-  //     Offset(340, 420),
-  //     Offset(100, 220),
-  //     Offset(300, 120),
-  //   ];
-  //   final paint = Paint()
-  //     ..color = Colors.black38
-  //     ..strokeWidth = 4
-  //     ..strokeCap = StrokeCap.round;
-  //   canvas.drawPoints(pointMode, points, paint);
-
-  //   // canvas.drawLine(p1, p2, paint);
-  //   // canvas.drawLine(points[0], points[1], paint);
-  // }
+  final StoryPersonDummyData data = StoryPersonDummyData();
 
   @override
   void paint(Canvas canvas, Size size) {
-    // final path = Path()
-    //   ..moveTo(300, 120)
-
-    //   ..quadraticBezierTo(300, 10, 100, 220)
-    //   ..quadraticBezierTo(100, 220, 340, 420)
-
-    //   ..quadraticBezierTo(340, 420, 50, 600)
-    //   ..quadraticBezierTo(50, 600, 300, 750)
-    //   ..quadraticBezierTo(300, 750, 50, 900);
-
     var paint = Paint();
 
-    paint.color = Colors.red;
+    paint.color = AppColors.pathPaintColor;
+    ;
     paint.style = PaintingStyle.stroke;
     paint.strokeWidth = 3;
 
-    var startPoint = Offset(300, 120);
-    var controlPoint1 = Offset(260, 250);
-    var controlPoint2 = Offset(222, 220);
-    var endPoint = Offset(100, 220);
-//for loop start points
-// and end points
-    final startPoints = [
-      Offset(300, 120),
-      Offset(100, 220),
-      Offset(340, 420),
-      Offset(50, 600),
-      Offset(300, 750),
-    ];
-    final endPoints = [
-      Offset(100, 220),
-      Offset(340, 420),
-      Offset(50, 600),
-      Offset(300, 750),
-      Offset(50, 900),
-    ];
-
-    endPoints.asMap().forEach((i, value) {
+    data.storyPersonList.asMap().forEach((i, person) {
       var path = Path();
-      path.moveTo(startPoints[i].dx, startPoints[i].dy);
+      path.moveTo(person.location.dx, person.location.dy);
       path.cubicTo(
-        startPoints[i].dx,
-        startPoints[i].dy,
-        (startPoints[i].dx + endPoints[i].dx) / 2,
-        (startPoints[i].dy + endPoints[i].dy) / 3,
-        endPoints[i].dx,
-        endPoints[i].dy,
+        person.location.dx,
+        person.location.dy,
+        (person.location.dx + person.destination.dx) / 2,
+        (person.location.dy + person.destination.dy) / 3,
+        person.destination.dx,
+        person.destination.dy,
       );
 
       canvas.drawPath(
@@ -220,42 +189,8 @@ class MyPainter extends CustomPainter {
               dashArray: CircularIntervalList<double>(<double>[6.0, 4.5])),
           paint);
     });
-//---------------------------
-    // var path = Path();
-    // path.moveTo(startPoint.dx, startPoint.dy);
-    // path.cubicTo(controlPoint1.dx, controlPoint1.dy, controlPoint2.dx,
-    //     controlPoint2.dy, endPoint.dx, endPoint.dy,);
-
-    // canvas.drawPath(
-    //     dashPath(path,
-    //         dashArray: CircularIntervalList<double>(<double>[6.0, 4.5])),
-    //     paint);
-    //---------- i      ------
-
-    // final paint = Paint()
-    //   ..color = Colors.black
-    //   ..style = PaintingStyle.stroke
-    //   ..strokeWidth = 4;
-    // canvas.drawPath(path, paint);
   }
-  // final paint = Paint()
-  //   ..color = Colors.black
-  //   ..style = PaintingStyle.stroke
-  //   ..strokeWidth = 4;
-  // canvas.drawPath(path, paint);
 
-// @override
-// void paint(Canvas canvas, Size size) {
-//   final rect = Rect.fromLTRB(50, 100, 250, 200);
-//   final startAngle = -math.pi / 2;
-//   final sweepAngle = math.pi;
-//   final useCenter = false;
-//   final paint = Paint()
-//     ..color = Colors.black
-//     ..style = PaintingStyle.stroke
-//     ..strokeWidth = 4;
-//   canvas.drawArc(rect, startAngle, sweepAngle, useCenter, paint);
-// }
   @override
   bool shouldRepaint(CustomPainter old) {
     return false;
